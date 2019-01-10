@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
 	// public float accTime = 0.4f;		//Acceleration init time
 	// public float moveTime = 0.8f;		//Max speed init time
 
-	private bool isDead = false;		//Used for game over 
+	//private bool isDead = false;		//Used for game over 
 	// private Animator animate;			//Access the animator for the player
 
 	//variables
@@ -22,9 +22,10 @@ public class Player : MonoBehaviour {
 	private Rigidbody2D characterBody;
 	private float ScreenWidth;
 
-	public AudioSource explosion;
+	public AudioSource source;
+	public AudioClip explosion;
+	public AudioClip collect;
 	
-
 	// Use this for initialization
 	void Start () {
 		// //Set dir to 0 on initialise
@@ -34,60 +35,22 @@ public class Player : MonoBehaviour {
 
 		// ScreenWidth = Screen.width;
 		// widthRel = character.transform.localScale.x / ScreenWidth;
-		// characterBody = character.GetComponent<Rigidbody2D>();
 
-		explosion = GetComponent<AudioSource> ();
+		characterBody = character.GetComponent<Rigidbody2D>();
+		AudioSource[] audioSources = GetComponents<AudioSource>();
+		source = audioSources[0];
+		explosion = audioSources[0].clip;
+		collect = audioSources[1].clip;
+		//explosion = GetComponent<AudioSource> ();
 	}
 
 	// Update is called once per frame
-	void Update () {		
-		
-		// If the player is alive do this
-		// if (GameManager.instance.hasBegun == false){
-		// 	if (Input.GetButtonDown ("Fire1")) {
-		// 		GameManager.instance.hasBegun = true;
-		// 		GameManager.instance.startText.SetActive (false);
-		// 		GameManager.instance.pauseButton.SetActive (true);
-		// 		GameManager.instance.leftButton.SetActive (true);
-		// 		GameManager.instance.rightButton.SetActive (true);
-		// 	} 
-		// }
-
-		// General player placement
-		// if (isDead == false && GameManager.instance.hasBegun == true && GameManager.instance.isPaused == false) {
-		// 	// If the player isn't moving i.e just started, then on tap set dir to left
-		// 	if (dir == 0f && Input.GetButtonDown ("Fire1")) {
-		// 		dir = -speed;
-		// 	} 
-		// 	// If the player is moving left, then on tap set dir to right and animate accordingly
-		// 	else if (dir == -speed && Input.GetButtonDown ("Fire1")) {
-		// 		// Decelerate
-		// 		dir = -dec;
-		// 		animate.SetTrigger ("TurnRight");
-		// 		// Accelerate
-		// 		Invoke ("accRight", accTime);
-		// 		// Move
-		// 		Invoke ("moveRight", moveTime);
-
-		// 	} 
-		// 	// If the player is moving right, then on tap set dir to left and animate accordingly
-		// 	else if (dir == speed && Input.GetButtonDown ("Fire1")) {
-		// 		// Decelerate
-		// 		dir = dec;
-		// 		animate.SetTrigger ("TurnLeft");
-		// 		// Accelerate
-		// 		Invoke ("accLeft", accTime);
-		// 		// Move
-		// 		Invoke ("moveLeft", moveTime);
-		// 	}			
-		// }		
-
-		// Move the player 
-		// this.transform.Translate (dir, 0, 0);
+	void Update () {				
 
 		// Pause the game
 		if (GameManager.instance.gameOver == false && GameManager.instance.isPaused == false && Input.GetKeyDown (KeyCode.Escape)) {
 			GameManager.instance.isPaused = true;
+			characterBody.velocity = new Vector2(0f,0f);
 			GameManager.instance.pauseText.SetActive (true);
 			GameManager.instance.pauseButton.SetActive (false);
 			GameManager.instance.leftButton.SetActive (false);
@@ -100,9 +63,9 @@ public class Player : MonoBehaviour {
 		// } else if (GameManager.instance.isPaused == true && dir == speed) {
 		// 	this.transform.Translate (0, 0, 0);
 		// }
-		if (GameManager.instance.isPaused == true) {
-			this.transform.Translate (0, 0, 0);
-		}		
+		// if (GameManager.instance.isPaused == true) {
+		// 	this.transform.Translate (0, 0, 0);
+		// }		
 
 	}
 
@@ -152,19 +115,34 @@ public class Player : MonoBehaviour {
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
 	}
 
+	public void mute(){	
+		GameManager.instance.muteButton.SetActive(false);
+		GameManager.instance.unmuteButton.SetActive(true);
+	}
+
+	public void unmute(){
+		GameManager.instance.muteButton.SetActive(true);
+		GameManager.instance.unmuteButton.SetActive(false);
+	}
+
 	// Collision with island kills player
 	void OnCollisionEnter2D(Collision2D coll){
 		if (coll.gameObject.tag == "Obstacle") {
+			character.GetComponent<Collider2D>().enabled = false;
 			// Set the player isDead state to true
-			isDead = true;
+			//isDead = true;
 			//Destroy (this.gameObject);
-			//explosion.Play();
+			// explosion.Play();
+			source.PlayOneShot(explosion);
 			character.transform.GetChild(0).gameObject.SetActive(false);
 			character.transform.GetChild(1).gameObject.SetActive(true);
 			// Access and fire SurferDied() from GameManager
 			GameManager.instance.SurferDied ();	
 		} else if (coll.gameObject.tag == "Points") {
 			GameManager.instance.CollectCoins ();
+			if(GameManager.instance.gameOver != true){
+				source.PlayOneShot(collect);
+			}			
 			Destroy (coll.gameObject);
 		} 
 	}

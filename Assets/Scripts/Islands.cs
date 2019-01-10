@@ -40,7 +40,9 @@ public class Islands : MonoBehaviour {
 		} else if (GameManager.instance.score >= 101 && GameManager.instance.score < 400) {
 			waitingForNextSpawn = 2;
 		} else if (GameManager.instance.score >= 401 && GameManager.instance.score < 1000) {
-			waitingForNextSpawn = 1;
+			waitingForNextSpawn = 1.5f;
+		} else if (GameManager.instance.score >= 1001 && GameManager.instance.score < 2000) {
+			waitingForNextSpawn = 1f;
 		} else if (GameManager.instance.score >= 1001 && GameManager.instance.score < 2000) {
 			waitingForNextSpawn = 0.5f;
 		}

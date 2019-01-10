@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject pauseButton;
 	public GameObject leftButton;
 	public GameObject rightButton;
+	public GameObject muteButton;
+	public GameObject unmuteButton;
 	public Text scoreText;
 	public Text distanceText;
 	public Text bestText;
@@ -22,6 +24,9 @@ public class GameManager : MonoBehaviour {
 	public bool gameOver = false;
 	public bool hasBegun = false;
 	public bool isPaused = false;
+
+	public int muted = 0;
+	public float volume = 0.3f;
 
 	private float distance = 0f;
 	public float score = 0f;
@@ -48,6 +53,24 @@ public class GameManager : MonoBehaviour {
 			best = PlayerPrefs.GetInt("best");
 		}
 
+		if (!PlayerPrefs.HasKey ("muted")) { 
+			PlayerPrefs.SetInt ("muted", 0);
+			muted = 0;
+			muteButton.SetActive(false);
+			unmuteButton.SetActive(true);
+		} else {
+			muted = PlayerPrefs.GetInt("muted");
+			if(muted == 0){
+				muteButton.SetActive(false);
+				unmuteButton.SetActive(true);
+			} else {
+				muteButton.SetActive(true);
+				unmuteButton.SetActive(false);
+			}		
+		}
+		// muteButton.SetActive(false);
+		// unmuteButton.SetActive(true);		
+
 		scoreText.enabled = false;
 	}
 
@@ -61,12 +84,20 @@ public class GameManager : MonoBehaviour {
 			distance += Time.deltaTime;
 			score = Mathf.Round (distance);
 			scoreText.enabled = true;
-		}
+		}			
 
 		scoreText.text = "SCORE: " + score.ToString ();
 		currentScoreText.text = score.ToString () + "";
 		bestText.text = best.ToString () + "";
-		highscoreText.text = best.ToString ();
+		highscoreText.text = best.ToString ();		
+
+		if (muteButton.activeSelf == true) {
+			AudioListener.volume = 0.0f;
+			PlayerPrefs.SetInt("muted", 1);
+		} else {
+			AudioListener.volume = volume;
+			PlayerPrefs.SetInt("muted", 0);
+		}		
 	}
 
 	//Collect coins
@@ -75,8 +106,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	// When the player dies
-	public void SurferDied(){
-
+	public void SurferDied(){		
 		if(score > PlayerPrefs.GetInt ("best")){
 			int scoreInt = (int) score;
 			PlayerPrefs.SetInt ("best", scoreInt);
@@ -91,6 +121,6 @@ public class GameManager : MonoBehaviour {
 		rightButton.SetActive (false);
 		scoreText.enabled = false;
 		// Sets gameOver to true so that the player can't move anymore
-		gameOver = true;
+		gameOver = true;		
 	}
 }

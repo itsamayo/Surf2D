@@ -43,7 +43,7 @@ public class Movement : MonoBehaviour {
 
         if(GameManager.instance.gameOver == true){
             characterBody.GetComponent<Renderer>().enabled = false;
-        }
+        }		
 
 	}
 	void FixedUpdate(){
@@ -58,7 +58,7 @@ public class Movement : MonoBehaviour {
 
 	private void RunCharacter(float horizontalInput){
 		//move player
-		characterBody.AddForce(new Vector2(horizontalInput * moveSpeed * Time.deltaTime, 0));
-
+		//characterBody.AddForce(new Vector2(horizontalInput * moveSpeed * Time.deltaTime, 0));
+		characterBody.velocity = new Vector2(horizontalInput * moveSpeed * Time.deltaTime,0f);
 	}
 }

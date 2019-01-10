@@ -26,7 +26,7 @@ public class Coins : MonoBehaviour {
 	// Use this for initialization
 	void Start()
 	{
-		//We don't need anything here right now
+		// collect = GetComponent<AudioSource> ();
 	}
 
 	void OnBecameInvisible() {
