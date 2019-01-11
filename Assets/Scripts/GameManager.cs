@@ -18,12 +18,14 @@ public class GameManager : MonoBehaviour {
 	public Text scoreText;
 	public Text distanceText;
 	public Text bestText;
-
 	public Text highscoreText;
+	public Text levelUp;
+	public Text scoreIncrease;
 	public Text currentScoreText;
 	public bool gameOver = false;
 	public bool hasBegun = false;
 	public bool isPaused = false;
+	
 
 	public int muted = 0;
 	public float volume = 0.3f;
@@ -97,13 +99,75 @@ public class GameManager : MonoBehaviour {
 		} else {
 			AudioListener.volume = volume;
 			PlayerPrefs.SetInt("muted", 0);
-		}		
+		}
+		
 	}
 
 	//Collect coins
 	public void CollectCoins(){
 		distance += 20;
+		StartCoroutine(ShowScoreIncreaseText());
+		if(distance >=100 && score <=110){
+			levelUp.text = "Nice!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=400 && score <=410){
+			levelUp.text = "Keep going!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=1000 && score <=1010){
+			levelUp.text = "Killing it!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=2000 && score <= 2010){
+			levelUp.text = "Unbelievable!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=3000 && score <= 3010){
+			levelUp.text = "Still going?!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=4000 && score <= 4010){
+			levelUp.text = "You're insane!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=5000 && score <= 5010){
+			levelUp.text = "This is crazy!";
+			StartCoroutine(ShowLevelUpText());
+		}
+	}	
+
+	IEnumerator ShowLevelUpText() {
+		StartCoroutine(FadeTextToFullAlpha(1f, levelUp));
+		yield return new WaitForSeconds(2);
+		StartCoroutine(FadeTextToZeroAlpha(1f, levelUp));
 	}
+
+	IEnumerator ShowScoreIncreaseText() {
+		StartCoroutine(FadeTextToFullAlpha(1f, scoreIncrease));
+		yield return new WaitForSeconds(1);
+		StartCoroutine(FadeTextToZeroAlpha(1f, scoreIncrease));
+	}
+
+	public IEnumerator FadeTextToFullAlpha(float t, Text i)
+    {
+        i.color = new Color(i.color.r, i.color.g, i.color.b, 0);
+        while (i.color.a < 1.0f)
+        {
+            i.color = new Color(i.color.r, i.color.g, i.color.b, i.color.a + (Time.deltaTime / t));
+            yield return null;
+        }
+    }
+ 
+    public IEnumerator FadeTextToZeroAlpha(float t, Text i)
+    {
+        i.color = new Color(i.color.r, i.color.g, i.color.b, 1);
+        while (i.color.a > 0.0f)
+        {
+            i.color = new Color(i.color.r, i.color.g, i.color.b, i.color.a - (Time.deltaTime / t));
+            yield return null;
+        }
+    }
 
 	// When the player dies
 	public void SurferDied(){		

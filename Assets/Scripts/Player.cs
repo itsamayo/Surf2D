@@ -48,7 +48,7 @@ public class Player : MonoBehaviour {
 	void Update () {				
 
 		// Pause the game
-		if (GameManager.instance.gameOver == false && GameManager.instance.isPaused == false && Input.GetKeyDown (KeyCode.Escape)) {
+		if (GameManager.instance.hasBegun == true && GameManager.instance.gameOver == false && GameManager.instance.isPaused == false && Input.GetKeyDown (KeyCode.Escape)) {
 			GameManager.instance.isPaused = true;
 			characterBody.velocity = new Vector2(0f,0f);
 			GameManager.instance.pauseText.SetActive (true);
