@@ -35,7 +35,7 @@ public class SpeedBoost : MonoBehaviour
 	// Update is called once per frame
 	public void Update()
 	{
-		if (GameManager.instance.hasBegun == true && GameManager.instance.isPaused == false && GameManager.instance.score > 10) {
+		if (GameManager.instance.hasBegun == true && GameManager.instance.isPaused == false && GameManager.instance.score > 400) {
 			// Timer to spawn the next speedboost 
 			theCountdown -= Time.deltaTime;
 			if (theCountdown <= 0) {
@@ -60,4 +60,10 @@ public class SpeedBoost : MonoBehaviour
 		Instantiate (boostPrefab, pos, transform.rotation);
 
 	}	
+
+	void OnCollisionEnter2D(Collision2D coll){
+		if (coll.gameObject.tag == "Obstacle") {
+			Destroy (coll.gameObject);
+		} 
+	}
 }

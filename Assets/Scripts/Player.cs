@@ -26,6 +26,7 @@ public class Player : MonoBehaviour {
 	public AudioClip explosion;
 	public AudioClip collect;
 	public AudioClip speedboost;
+	public AudioClip backgroundMusic;
 	// Use this for initialization
 	void Start () {
 		// //Set dir to 0 on initialise
@@ -42,6 +43,8 @@ public class Player : MonoBehaviour {
 		explosion = audioSources[0].clip;
 		collect = audioSources[1].clip;
 		speedboost = audioSources[2].clip;
+		backgroundMusic = audioSources[3].clip;
+
 		//explosion = GetComponent<AudioSource> ();
 	}
 
@@ -97,19 +100,30 @@ public class Player : MonoBehaviour {
 	}
 
 	public void unpause(){
-		GameManager.instance.isPaused = false;
+		StartCoroutine(unpauseGameMovement());
 		GameManager.instance.pauseText.SetActive (false);
 		GameManager.instance.pauseButton.SetActive (true);
 		GameManager.instance.leftButton.SetActive (true);
 		GameManager.instance.rightButton.SetActive (true);
 	}
 
+	IEnumerator unpauseGameMovement() {
+		yield return new WaitForSeconds(0.1f);
+		GameManager.instance.isPaused = false;
+	}
+
 	public void startGame(){
-		GameManager.instance.hasBegun = true;
+		StartCoroutine(startGameMovement());
 		GameManager.instance.startText.SetActive (false);
 		GameManager.instance.pauseButton.SetActive (true);
 		GameManager.instance.leftButton.SetActive (true);
 		GameManager.instance.rightButton.SetActive (true);
+	}
+
+	IEnumerator startGameMovement() {
+		yield return new WaitForSeconds(0.1f);
+		GameManager.instance.hasBegun = true;
+		source.PlayOneShot(backgroundMusic);
 	}
 
 	public void restart(){
@@ -138,9 +152,15 @@ public class Player : MonoBehaviour {
 			character.transform.GetChild(0).gameObject.SetActive(false);
 			character.transform.GetChild(1).gameObject.SetActive(true);
 			// Access and fire SurferDied() from GameManager
-			GameManager.instance.SurferDied ();	
-		} else if (coll.gameObject.tag == "Points") {
+			GameManager.instance.SurferDied ();
+		} else if (coll.gameObject.tag == "Diamond") {
 			GameManager.instance.CollectCoins ();
+			if(GameManager.instance.gameOver != true){
+				source.PlayOneShot(collect);
+			}			
+			Destroy (coll.gameObject);
+		} else if (coll.gameObject.tag == "BigDiamond") {
+			GameManager.instance.CollectBigDiamonds ();
 			if(GameManager.instance.gameOver != true){
 				source.PlayOneShot(collect);
 			}			

@@ -9,11 +9,13 @@ public class Movement : MonoBehaviour {
 
 	private Rigidbody2D characterBody;
 	private float ScreenWidth;
+	private float ScreenHeight;
     private float widthRel;
 
 	// Use this for initialization
 	void Start () {
 		ScreenWidth = Screen.width;
+		ScreenHeight = Screen.height;
         widthRel = character.transform.localScale.x / ScreenWidth;
 		characterBody = character.GetComponent<Rigidbody2D>();
         // characterBody.freezeRotation = false;
@@ -24,12 +26,12 @@ public class Movement : MonoBehaviour {
 		int i = 0;
 		//loop over every touch found
 		while (i < Input.touchCount && GameManager.instance.hasBegun == true && GameManager.instance.isPaused == false && GameManager.instance.gameOver == false) {
-			if (Input.GetTouch (i).position.x > ScreenWidth / 2) {
+			if (Input.GetTouch (i).position.x > ScreenWidth / 2 && Input.GetTouch(i).position.y < ScreenHeight / 2) {
 				//move right
 				RunCharacter (1.0f);
                 characterBody.rotation = -15f;
 			}
-			if (Input.GetTouch (i).position.x < ScreenWidth / 2) {
+			if (Input.GetTouch (i).position.x < ScreenWidth / 2 && Input.GetTouch(i).position.y < ScreenHeight / 2) {
 				//move left
 				RunCharacter (-1.0f);
                 characterBody.rotation = 15f;

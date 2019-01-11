@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour {
 			distance += Time.deltaTime;
 			score = Mathf.Round (distance);
 			scoreText.enabled = true;
+			// AudioListener.volume = 0.0f;
 		}			
 
 		scoreText.text = "SCORE: " + score.ToString ();
@@ -102,13 +103,14 @@ public class GameManager : MonoBehaviour {
 		} else {
 			AudioListener.volume = volume;
 			PlayerPrefs.SetInt("muted", 0);
-		}
+		}		
 		
 	}
 
 	//Collect coins
 	public void CollectCoins(){
 		distance += 20;
+		scoreIncrease.text = "+20";
 		StartCoroutine(ShowScoreIncreaseText());
 		if(distance >=100 && score <=110){
 			levelUp.text = "Nice!";
@@ -140,6 +142,40 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void CollectBigDiamonds(){
+		distance += 50;
+		scoreIncrease.text = "+50";
+		StartCoroutine(ShowScoreIncreaseText());
+		if(distance >=100 && score <=150){
+			levelUp.text = "Nice!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=400 && score <=450){
+			levelUp.text = "Keep going!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=1000 && score <=1050){
+			levelUp.text = "Killing it!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=2000 && score <= 2050){
+			levelUp.text = "Unbelievable!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=3000 && score <= 3050){
+			levelUp.text = "Still going?!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=4000 && score <= 4050){
+			levelUp.text = "You're insane!";
+			StartCoroutine(ShowLevelUpText());
+		}
+		if(distance >=5000 && score <= 5050){
+			levelUp.text = "This is crazy!";
+			StartCoroutine(ShowLevelUpText());
+		}
+	}
+
 	public void CollectSpeedboost(){
 		speedBoost.text = "Turbo turning active!";
 		StartCoroutine(ShowSpeedBoostText());
@@ -147,7 +183,7 @@ public class GameManager : MonoBehaviour {
 	}	
 
 	IEnumerator ActivateSpeedBoost() {
-		speed = 1300;
+		speed = 500;
 		yield return new WaitForSeconds(6);
 		speed = 300;
 	}
