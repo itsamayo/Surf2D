@@ -25,7 +25,7 @@ public class Player : MonoBehaviour {
 	public AudioSource source;
 	public AudioClip explosion;
 	public AudioClip collect;
-	
+	public AudioClip speedboost;
 	// Use this for initialization
 	void Start () {
 		// //Set dir to 0 on initialise
@@ -41,6 +41,7 @@ public class Player : MonoBehaviour {
 		source = audioSources[0];
 		explosion = audioSources[0].clip;
 		collect = audioSources[1].clip;
+		speedboost = audioSources[2].clip;
 		//explosion = GetComponent<AudioSource> ();
 	}
 
@@ -142,6 +143,13 @@ public class Player : MonoBehaviour {
 			GameManager.instance.CollectCoins ();
 			if(GameManager.instance.gameOver != true){
 				source.PlayOneShot(collect);
+			}			
+			Destroy (coll.gameObject);
+		} else if (coll.gameObject.tag == "Speedboost") {
+			GameManager.instance.CollectSpeedboost ();
+			GameManager.instance.speed = 600;			
+			if(GameManager.instance.gameOver != true){
+				source.PlayOneShot(speedboost);
 			}			
 			Destroy (coll.gameObject);
 		} 

@@ -20,11 +20,14 @@ public class GameManager : MonoBehaviour {
 	public Text bestText;
 	public Text highscoreText;
 	public Text levelUp;
+	public Text speedBoost;
 	public Text scoreIncrease;
 	public Text currentScoreText;
 	public bool gameOver = false;
 	public bool hasBegun = false;
 	public bool isPaused = false;
+
+	public int speed = 300;
 	
 
 	public int muted = 0;
@@ -135,8 +138,24 @@ public class GameManager : MonoBehaviour {
 			levelUp.text = "This is crazy!";
 			StartCoroutine(ShowLevelUpText());
 		}
+	}
+
+	public void CollectSpeedboost(){
+		speedBoost.text = "Turbo turning active!";
+		StartCoroutine(ShowSpeedBoostText());
+		StartCoroutine(ActivateSpeedBoost());
 	}	
 
+	IEnumerator ActivateSpeedBoost() {
+		speed = 1300;
+		yield return new WaitForSeconds(6);
+		speed = 300;
+	}
+	IEnumerator ShowSpeedBoostText() {
+		StartCoroutine(FadeTextToFullAlpha(1f, speedBoost));
+		yield return new WaitForSeconds(6);
+		StartCoroutine(FadeTextToZeroAlpha(1f, speedBoost));
+	}
 	IEnumerator ShowLevelUpText() {
 		StartCoroutine(FadeTextToFullAlpha(1f, levelUp));
 		yield return new WaitForSeconds(2);

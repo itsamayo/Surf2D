@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour {
 	//variables
-	public float moveSpeed = 300;
+	// public float moveSpeed = GameManager.instance.speed;
 	public GameObject character;
 
 	private Rigidbody2D characterBody;
@@ -59,6 +59,6 @@ public class Movement : MonoBehaviour {
 	private void RunCharacter(float horizontalInput){
 		//move player
 		//characterBody.AddForce(new Vector2(horizontalInput * moveSpeed * Time.deltaTime, 0));
-		characterBody.velocity = new Vector2(horizontalInput * moveSpeed * Time.deltaTime,0f);
+		characterBody.velocity = new Vector2(horizontalInput * GameManager.instance.speed * Time.deltaTime,0f);
 	}
 }
