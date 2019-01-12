@@ -6,7 +6,6 @@ public class Movement : MonoBehaviour {
 	//variables
 	// public float moveSpeed = GameManager.instance.speed;
 	public GameObject character;
-
 	private Rigidbody2D characterBody;
 	private float ScreenWidth;
 	private float ScreenHeight;
@@ -17,7 +16,7 @@ public class Movement : MonoBehaviour {
 		ScreenWidth = Screen.width;
 		ScreenHeight = Screen.height;
         widthRel = character.transform.localScale.x / ScreenWidth;
-		characterBody = character.GetComponent<Rigidbody2D>();
+		characterBody = character.GetComponent<Rigidbody2D>();		
         // characterBody.freezeRotation = false;
 	}
 	

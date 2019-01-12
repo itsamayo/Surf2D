@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour {
 	public bool gameOver = false;
 	public bool hasBegun = false;
 	public bool isPaused = false;
-
+	public AudioSource levelup;
 	public int speed = 300;
 	
 
@@ -114,30 +114,37 @@ public class GameManager : MonoBehaviour {
 		StartCoroutine(ShowScoreIncreaseText());
 		if(distance >=100 && score <=110){
 			levelUp.text = "Nice!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=400 && score <=410){
 			levelUp.text = "Keep going!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=1000 && score <=1010){
 			levelUp.text = "Killing it!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=2000 && score <= 2010){
 			levelUp.text = "Unbelievable!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=3000 && score <= 3010){
 			levelUp.text = "Still going?!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=4000 && score <= 4010){
 			levelUp.text = "You're insane!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=5000 && score <= 5010){
 			levelUp.text = "This is crazy!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 	}
@@ -148,30 +155,37 @@ public class GameManager : MonoBehaviour {
 		StartCoroutine(ShowScoreIncreaseText());
 		if(distance >=100 && score <=150){
 			levelUp.text = "Nice!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=400 && score <=450){
 			levelUp.text = "Keep going!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=1000 && score <=1050){
 			levelUp.text = "Killing it!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=2000 && score <= 2050){
 			levelUp.text = "Unbelievable!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=3000 && score <= 3050){
 			levelUp.text = "Still going?!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=4000 && score <= 4050){
 			levelUp.text = "You're insane!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 		if(distance >=5000 && score <= 5050){
 			levelUp.text = "This is crazy!";
+			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
 		}
 	}

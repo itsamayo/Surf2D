@@ -26,7 +26,7 @@ public class Player : MonoBehaviour {
 	public AudioClip explosion;
 	public AudioClip collect;
 	public AudioClip speedboost;
-	public AudioClip backgroundMusic;
+	
 	// Use this for initialization
 	void Start () {
 		// //Set dir to 0 on initialise
@@ -43,7 +43,6 @@ public class Player : MonoBehaviour {
 		explosion = audioSources[0].clip;
 		collect = audioSources[1].clip;
 		speedboost = audioSources[2].clip;
-		backgroundMusic = audioSources[3].clip;
 
 		//explosion = GetComponent<AudioSource> ();
 	}
@@ -123,7 +122,6 @@ public class Player : MonoBehaviour {
 	IEnumerator startGameMovement() {
 		yield return new WaitForSeconds(0.1f);
 		GameManager.instance.hasBegun = true;
-		source.PlayOneShot(backgroundMusic);
 	}
 
 	public void restart(){
