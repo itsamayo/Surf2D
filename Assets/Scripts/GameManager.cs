@@ -3,18 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Net;
+using UnityEngine.Networking;
 
 public class GameManager : MonoBehaviour {
 
 	public static GameManager instance;
 	public GameObject startText;
 	public GameObject gameOverText;
+	public GameObject leaderboardText;
 	public GameObject pauseText;
 	public GameObject pauseButton;
 	public GameObject leftButton;
 	public GameObject rightButton;
 	public GameObject muteButton;
 	public GameObject unmuteButton;
+	public GameObject networkError;
+
+	public GameObject newHighScore;
+	public Text playersName;
 	public Text scoreText;
 	public Text distanceText;
 	public Text bestText;
@@ -23,6 +30,16 @@ public class GameManager : MonoBehaviour {
 	public Text speedBoost;
 	public Text scoreIncrease;
 	public Text currentScoreText;
+	public Text name1;
+	public Text score1;
+	public Text name2;
+	public Text score2;
+	public Text name3;
+	public Text score3;
+	public Text name4;
+	public Text score4;
+	public Text name5;
+	public Text score5;
 	public bool gameOver = false;
 	public bool hasBegun = false;
 	public bool isPaused = false;
@@ -194,7 +211,17 @@ public class GameManager : MonoBehaviour {
 		speedBoost.text = "Turbo turning active!";
 		StartCoroutine(ShowSpeedBoostText());
 		StartCoroutine(ActivateSpeedBoost());
+	}
+
+	public void CloseNetworkError(){
+		networkError.SetActive(false);
+		gameOverText.SetActive(true);
 	}	
+
+	public void SubmitNewHighScore(){
+		newHighScore.SetActive(false);
+		StartCoroutine(setNewHighScore());
+	}
 
 	IEnumerator ActivateSpeedBoost() {
 		speed = 500;
@@ -238,15 +265,37 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+	public IEnumerator setNewHighScore(){
+		int scoreInt = (int) score;		
+		WWWForm form = new WWWForm();
+        form.AddField("name", playersName.text);
+		form.AddField("score", scoreInt);
+ 
+        UnityWebRequest www = UnityWebRequest.Post("https://waila.ml/api/dodgyrocks/createScore", form);
+        yield return www.SendWebRequest();
+ 
+        if(www.isNetworkError || www.isHttpError) {
+            Debug.Log(www.error);
+        }
+        else {
+            Debug.Log("Form upload complete!");
+        }
+	}
+
 	// When the player dies
 	public void SurferDied(){		
+		int scoreInt = (int) score;
 		if(score > PlayerPrefs.GetInt ("best")){
-			int scoreInt = (int) score;
+			// int scoreInt = (int) score;
 			PlayerPrefs.SetInt ("best", scoreInt);
-		}
-
+			if(Application.internetReachability == NetworkReachability.NotReachable){
+				Debug.Log("Error. Check internet connection!");
+				// networkError.SetActive(true);
+			} else {
+				newHighScore.SetActive(true);				
+			}
+		}		
 		PlayerPrefs.SetInt ("score", 0);
-
 		// Sets the game over overlay to visible
 		gameOverText.SetActive (true);
 		pauseButton.SetActive (false);

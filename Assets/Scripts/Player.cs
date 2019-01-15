@@ -124,6 +124,17 @@ public class Player : MonoBehaviour {
 		GameManager.instance.hasBegun = true;
 	}
 
+	// public void leaderBoardOpen(){
+	// 	GameManager.instance.leaberboardText.SetActive(true);
+	// 	GameManager.instance.gameOverText.SetActive(false);
+	// }
+
+	public void leaderBoardClose(){
+		GameManager.instance.networkError.SetActive(false);
+		GameManager.instance.leaderboardText.SetActive(false);
+		GameManager.instance.gameOverText.SetActive(true);
+	}
+
 	public void restart(){
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
 	}
