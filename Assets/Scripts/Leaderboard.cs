@@ -6,7 +6,8 @@ using System;
 using UnityEngine;
 
 public class Leaderboard : MonoBehaviour
-{   
+{      
+
      [Serializable]
       public class Scores
       {
@@ -20,16 +21,16 @@ public class Leaderboard : MonoBehaviour
           
       }
     
-    void Start () {
-        GetScores();      
+    void Start () {        
+       // GetScores();     
     }      
 
-    public void GetScores () {
+    public void GetScores () {        
         if(Application.internetReachability == NetworkReachability.NotReachable){
             Debug.Log("Error. Check internet connection!");
             GameManager.instance.networkError.SetActive(true);
             GameManager.instance.gameOverText.SetActive(false);
-        } else {
+        } else {           
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format("https://waila.ml/api/dodgyrocks/getScores"));
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             StreamReader reader = new StreamReader(response.GetResponseStream());
@@ -46,7 +47,8 @@ public class Leaderboard : MonoBehaviour
             GameManager.instance.score4.text = info.scores[3].score.ToString();
             GameManager.instance.score5.text = info.scores[4].score.ToString();
             GameManager.instance.leaderboardText.SetActive(true);
-		    GameManager.instance.gameOverText.SetActive(false);
+            // GameManager.instance.loadingCircle.SetActive(false);
+		    GameManager.instance.startText.SetActive(false);
         }        
     }
 }

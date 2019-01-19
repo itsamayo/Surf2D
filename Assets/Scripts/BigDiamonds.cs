@@ -11,7 +11,7 @@ public class BigDiamonds : MonoBehaviour {
 	//Time it takes to spawn big diamonds
 	[Space(3)]
 	private float waitingForNextSpawn = 10;
-	private float theCountdown = 1;
+	private float theCountdown = 10;
 
 	// the range of X - Found to work best when set from -4 to 4
 	[Header ("X Spawn Range")]

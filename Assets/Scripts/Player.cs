@@ -26,6 +26,13 @@ public class Player : MonoBehaviour {
 	public AudioClip explosion;
 	public AudioClip collect;
 	public AudioClip speedboost;
+
+	public Sprite orangeBoat;
+	public Sprite greenBoat;
+	public Sprite limeBoat;
+	public Sprite pinkBoat;
+	public Sprite blackBoat;
+	private int boatChoice;
 	
 	// Use this for initialization
 	void Start () {
@@ -43,7 +50,22 @@ public class Player : MonoBehaviour {
 		explosion = audioSources[0].clip;
 		collect = audioSources[1].clip;
 		speedboost = audioSources[2].clip;
-
+		if(PlayerPrefs.HasKey("boat")){
+			boatChoice = PlayerPrefs.GetInt("boat");
+			if(boatChoice==0){
+				characterBody.GetComponent<SpriteRenderer>().sprite = orangeBoat;
+			} else if(boatChoice==1){
+				characterBody.GetComponent<SpriteRenderer>().sprite = greenBoat;
+			} else if(boatChoice==2){
+				characterBody.GetComponent<SpriteRenderer>().sprite = limeBoat;
+			} else if(boatChoice==3){
+				characterBody.GetComponent<SpriteRenderer>().sprite = pinkBoat;
+			} else if(boatChoice==4){
+				characterBody.GetComponent<SpriteRenderer>().sprite = blackBoat;
+			}
+		} else {
+			characterBody.GetComponent<SpriteRenderer>().sprite = blackBoat;
+		}
 		//explosion = GetComponent<AudioSource> ();
 	}
 
@@ -90,6 +112,28 @@ public class Player : MonoBehaviour {
 	// 	dir = speed;
 	// }
 
+	public void ChooseOrangeBoat(){
+		PlayerPrefs.SetInt("boat", 0);
+		characterBody.GetComponent<SpriteRenderer>().sprite = orangeBoat;
+	}
+	public void ChooseGreenBoat(){
+		PlayerPrefs.SetInt("boat", 1);
+		characterBody.GetComponent<SpriteRenderer>().sprite = greenBoat;
+	}
+	public void ChooseLimeBoat(){
+		PlayerPrefs.SetInt("boat", 2);
+		characterBody.GetComponent<SpriteRenderer>().sprite = limeBoat;
+	}
+	public void ChoosePinkBoat(){
+		PlayerPrefs.SetInt("boat", 3);
+		characterBody.GetComponent<SpriteRenderer>().sprite = pinkBoat;
+	}
+	public void ChooseBlackBoat(){
+		PlayerPrefs.SetInt("boat", 4);
+		characterBody.GetComponent<SpriteRenderer>().sprite = blackBoat;
+	}
+
+
 	public void pause(){
 		GameManager.instance.isPaused = true;
 		GameManager.instance.pauseText.SetActive (true);
@@ -132,7 +176,7 @@ public class Player : MonoBehaviour {
 	public void leaderBoardClose(){
 		GameManager.instance.networkError.SetActive(false);
 		GameManager.instance.leaderboardText.SetActive(false);
-		GameManager.instance.gameOverText.SetActive(true);
+		GameManager.instance.startText.SetActive(true);
 	}
 
 	public void restart(){

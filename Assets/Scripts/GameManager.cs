@@ -19,8 +19,9 @@ public class GameManager : MonoBehaviour {
 	public GameObject muteButton;
 	public GameObject unmuteButton;
 	public GameObject networkError;
-
+	public GameObject BoatSelect;
 	public GameObject newHighScore;
+	public GameObject loadingCircle;
 	public Text playersName;
 	public Text scoreText;
 	public Text distanceText;
@@ -45,11 +46,8 @@ public class GameManager : MonoBehaviour {
 	public bool isPaused = false;
 	public AudioSource levelup;
 	public int speed = 300;
-	
-
 	public int muted = 0;
 	public float volume = 0.3f;
-
 	private float distance = 0f;
 	public float score = 0f;
 	private float best = 0f;
@@ -90,6 +88,7 @@ public class GameManager : MonoBehaviour {
 				unmuteButton.SetActive(false);
 			}		
 		}
+		
 		// muteButton.SetActive(false);
 		// unmuteButton.SetActive(true);		
 
@@ -213,6 +212,16 @@ public class GameManager : MonoBehaviour {
 		StartCoroutine(ActivateSpeedBoost());
 	}
 
+	public void SelectBoat(){
+		startText.SetActive (false);
+		BoatSelect.SetActive (true);
+	}
+
+	public void CloseBoatSelection(){
+		startText.SetActive (true);
+		BoatSelect.SetActive (false);
+	}
+
 	public void CloseNetworkError(){
 		networkError.SetActive(false);
 		gameOverText.SetActive(true);
@@ -269,8 +278,7 @@ public class GameManager : MonoBehaviour {
 		int scoreInt = (int) score;		
 		WWWForm form = new WWWForm();
         form.AddField("name", playersName.text);
-		form.AddField("score", scoreInt);
- 
+		form.AddField("score", scoreInt);		
         UnityWebRequest www = UnityWebRequest.Post("https://waila.ml/api/dodgyrocks/createScore", form);
         yield return www.SendWebRequest();
  
@@ -291,7 +299,7 @@ public class GameManager : MonoBehaviour {
 			if(Application.internetReachability == NetworkReachability.NotReachable){
 				Debug.Log("Error. Check internet connection!");
 				// networkError.SetActive(true);
-			} else {
+			} else {				
 				newHighScore.SetActive(true);				
 			}
 		}		
