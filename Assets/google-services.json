@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "816099354283",
+    "firebase_url": "https://dodgyrocks.firebaseio.com",
+    "project_id": "dodgyrocks",
+    "storage_bucket": "dodgyrocks.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816099354283:android:365c58aeeff6f3f0",
+        "android_client_info": {
+          "package_name": "com.mayo.dtr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816099354283-muv43un8dijf4bl1qm6ljf7cu9lj2267.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAomRovWv5IBcnQZiUbO9OBc6UNYLk4lUc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

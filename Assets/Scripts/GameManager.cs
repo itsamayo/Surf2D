@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour {
 	public Text speedBoost;
 	public Text scoreIncrease;
 	public Text currentScoreText;
+	public Text playersPos;
+	public Text playersScore;
 	public Text name1;
 	public Text score1;
 	public Text name2;
@@ -50,10 +52,13 @@ public class GameManager : MonoBehaviour {
 	public float volume = 0.3f;
 	private float distance = 0f;
 	public float score = 0f;
-	private float best = 0f;
+	public float best = 0f;
 
 	// Use this for initialization
 	void Awake () {
+		Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
+        Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
+
 		// Just to make sure there's only ever one instance of the GameManager
 		if (instance == null) {
 			instance = this;
@@ -94,6 +99,31 @@ public class GameManager : MonoBehaviour {
 
 		scoreText.enabled = false;
 	}
+
+	public void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
+    {
+        Debug.Log("Received Registration Token: " + token.Token);
+		StartCoroutine(SubmitNewToken(token.Token));
+		
+    }
+
+	public IEnumerator SubmitNewToken(string token){
+		WWWForm form = new WWWForm();
+        form.AddField("token", token);
+        UnityWebRequest www = UnityWebRequest.Post("https://waila.ml/api/dodgyrocks/updateFirebaseToken", form);
+        yield return www.SendWebRequest(); 
+        if(www.isNetworkError || www.isHttpError) {
+            Debug.Log(www.error);
+        }
+        else {
+            Debug.Log("Form upload complete: " + www.downloadHandler.data);
+        }
+	}
+
+    public void OnMessageReceived(object sender, Firebase.Messaging.MessageReceivedEventArgs e)
+    {
+        Debug.Log("Received a new message from: " + e.Message.From);		
+    }   
 
 	// Update is called once per frame
 	void Update () {
@@ -280,13 +310,12 @@ public class GameManager : MonoBehaviour {
         form.AddField("name", playersName.text);
 		form.AddField("score", scoreInt);		
         UnityWebRequest www = UnityWebRequest.Post("https://waila.ml/api/dodgyrocks/createScore", form);
-        yield return www.SendWebRequest();
- 
+        yield return www.SendWebRequest(); 
         if(www.isNetworkError || www.isHttpError) {
             Debug.Log(www.error);
         }
         else {
-            Debug.Log("Form upload complete!");
+            Debug.Log("Form upload complete: " + www.downloadHandler.data);
         }
 	}
 
