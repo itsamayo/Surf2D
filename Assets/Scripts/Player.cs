@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using GoogleMobileAds.Api;
 
 public class Player : MonoBehaviour {
 
@@ -33,6 +34,8 @@ public class Player : MonoBehaviour {
 	public Sprite pinkBoat;
 	public Sprite blackBoat;
 	private int boatChoice;
+
+	private InterstitialAd interstitial;
 	
 	// Use this for initialization
 	void Start () {
@@ -67,6 +70,34 @@ public class Player : MonoBehaviour {
 			characterBody.GetComponent<SpriteRenderer>().sprite = blackBoat;
 		}
 		//explosion = GetComponent<AudioSource> ();
+		#if UNITY_ANDROID
+            string appId = "ca-app-pub-3541577481831776~2365521691";
+        #elif UNITY_IPHONE
+            string appId = "unexpected_platform";
+        #else
+            string appId = "unexpected_platform";
+        #endif
+
+        // Initialize the Google Mobile Ads SDK.
+        MobileAds.Initialize(appId);
+	}
+
+	private void RequestInterstitial()
+	{
+		#if UNITY_ANDROID
+			string adUnitId = "ca-app-pub-3940256099942544/1033173712";
+		#elif UNITY_IPHONE
+			string adUnitId = "ca-app-pub-3940256099942544/4411468910";
+		#else
+			string adUnitId = "unexpected_platform";
+		#endif
+
+		// Initialize an InterstitialAd.
+		this.interstitial = new InterstitialAd(adUnitId);
+		// Create an empty ad request.
+		AdRequest request = new AdRequest.Builder().Build();
+		// Load the interstitial with the request.
+		this.interstitial.LoadAd(request);
 	}
 
 	// Update is called once per frame
@@ -140,6 +171,9 @@ public class Player : MonoBehaviour {
 		GameManager.instance.pauseButton.SetActive (false);
 		GameManager.instance.leftButton.SetActive (false);
 		GameManager.instance.rightButton.SetActive (false);
+		if (this.interstitial.IsLoaded()) {
+			this.interstitial.Show();
+		}
 	}
 
 	public void unpause(){
@@ -156,6 +190,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void startGame(){
+		this.RequestInterstitial();
 		StartCoroutine(startGameMovement());
 		GameManager.instance.startText.SetActive (false);
 		GameManager.instance.pauseButton.SetActive (true);
