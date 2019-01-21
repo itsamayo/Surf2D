@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Net;
+using System.IO;
+using System;
 using UnityEngine.Networking;
 
 public class GameManager : MonoBehaviour {
@@ -29,10 +31,13 @@ public class GameManager : MonoBehaviour {
 	public Text highscoreText;
 	public Text levelUp;
 	public Text speedBoost;
+	public Text slomoText;
 	public Text scoreIncrease;
 	public Text currentScoreText;
 	public Text playersPos;
 	public Text playersScore;
+	public Text playersPos2;
+	public Text playersScore2;
 	public Text name1;
 	public Text score1;
 	public Text name2;
@@ -43,11 +48,23 @@ public class GameManager : MonoBehaviour {
 	public Text score4;
 	public Text name5;
 	public Text score5;
+	public Text name1a;
+	public Text score1a;
+	public Text name2a;
+	public Text score2a;
+	public Text name3a;
+	public Text score3a;
+	public Text name4a;
+	public Text score4a;
+	public Text name5a;
+	public Text score5a;
 	public bool gameOver = false;
 	public bool hasBegun = false;
 	public bool isPaused = false;
 	public AudioSource levelup;
 	public int speed = 300;
+	public float scrollSpeed = 0.15f;
+	public bool spawnsActive = true;
 	public int muted = 0;
 	public float volume = 0.3f;
 	private float distance = 0f;
@@ -242,6 +259,12 @@ public class GameManager : MonoBehaviour {
 		StartCoroutine(ActivateSpeedBoost());
 	}
 
+	public void CollectSlomo(){
+		slomoText.text = "Slow motion active!";
+		StartCoroutine(ShowSlomoText());
+		StartCoroutine(ActivateSlomo());
+	}
+
 	public void SelectBoat(){
 		startText.SetActive (false);
 		BoatSelect.SetActive (true);
@@ -262,6 +285,13 @@ public class GameManager : MonoBehaviour {
 		StartCoroutine(setNewHighScore());
 	}
 
+	IEnumerator ActivateSlomo() {
+		scrollSpeed = 0.08f;
+		spawnsActive = false;
+		yield return new WaitForSeconds(6);
+		scrollSpeed = 0.15f;
+		spawnsActive = true;
+	}
 	IEnumerator ActivateSpeedBoost() {
 		speed = 500;
 		yield return new WaitForSeconds(6);
@@ -272,6 +302,13 @@ public class GameManager : MonoBehaviour {
 		yield return new WaitForSeconds(6);
 		StartCoroutine(FadeTextToZeroAlpha(1f, speedBoost));
 	}
+
+	IEnumerator ShowSlomoText() {
+		StartCoroutine(FadeTextToFullAlpha(1f, slomoText));
+		yield return new WaitForSeconds(6);
+		StartCoroutine(FadeTextToZeroAlpha(1f, slomoText));
+	}
+
 	IEnumerator ShowLevelUpText() {
 		StartCoroutine(FadeTextToFullAlpha(1f, levelUp));
 		yield return new WaitForSeconds(2);
@@ -334,6 +371,7 @@ public class GameManager : MonoBehaviour {
 		}		
 		PlayerPrefs.SetInt ("score", 0);
 		// Sets the game over overlay to visible
+		StartCoroutine(GetScores());
 		gameOverText.SetActive (true);
 		pauseButton.SetActive (false);
 		leftButton.SetActive (false);
@@ -342,4 +380,125 @@ public class GameManager : MonoBehaviour {
 		// Sets gameOver to true so that the player can't move anymore
 		gameOver = true;		
 	}
+
+	[Serializable]
+      public class Scores
+      {
+          public string name;
+          public string score;
+      }
+      [Serializable]
+      public class ScoreInfo
+      {
+          public Scores[] scores;
+          
+      }        
+    
+    IEnumerator GetScores () {
+        yield return new WaitForSeconds(1);        
+        if(Application.internetReachability == NetworkReachability.NotReachable){
+            Debug.Log("Error. Check internet connection!");
+            GameManager.instance.leaderboardText.SetActive(false);
+            GameManager.instance.networkError.SetActive(true);
+            GameManager.instance.startText.SetActive(false);
+        } else {                     
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format("https://waila.ml/api/dodgyrocks/getScores?score="+PlayerPrefs.GetInt("best")));
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            StreamReader reader = new StreamReader(response.GetResponseStream());
+            string jsonResponse = reader.ReadToEnd();
+            ScoreInfo info = new ScoreInfo{scores=JsonHelper2.FromJson<Scores>(jsonResponse)};
+            // For the pop-able view from the start
+            GameManager.instance.name1.text = "1. " + info.scores[1].name;
+            GameManager.instance.name2.text = "2. " + info.scores[2].name;
+            GameManager.instance.name3.text = "3. " + info.scores[3].name;
+            GameManager.instance.name4.text = "4. " + info.scores[4].name;
+            GameManager.instance.name5.text = "5. " + info.scores[5].name;
+            GameManager.instance.score1.text = info.scores[1].score.ToString();
+            GameManager.instance.score2.text = info.scores[2].score.ToString();
+            GameManager.instance.score3.text = info.scores[3].score.ToString();
+            GameManager.instance.score4.text = info.scores[4].score.ToString();
+            GameManager.instance.score5.text = info.scores[5].score.ToString();
+            // For the Game Over view
+            GameManager.instance.name1a.text = "1. " + info.scores[1].name;
+            GameManager.instance.name2a.text = "2. " + info.scores[2].name;
+            GameManager.instance.name3a.text = "3. " + info.scores[3].name;
+            GameManager.instance.name4a.text = "4. " + info.scores[4].name;
+            GameManager.instance.name5a.text = "5. " + info.scores[5].name;
+            GameManager.instance.score1a.text = info.scores[1].score.ToString();
+            GameManager.instance.score2a.text = info.scores[2].score.ToString();
+            GameManager.instance.score3a.text = info.scores[3].score.ToString();
+            GameManager.instance.score4a.text = info.scores[4].score.ToString();
+            GameManager.instance.score5a.text = info.scores[5].score.ToString();
+            if(info.scores[0].score.ToString() == "-1"){
+                GameManager.instance.playersPos.text = "";
+                GameManager.instance.playersScore.text = "";
+                GameManager.instance.playersPos2.text = "";
+                GameManager.instance.playersScore2.text = "";
+            } else {
+                GameManager.instance.playersPos.text = info.scores[0].score.ToString() + ". You";
+                GameManager.instance.playersScore.text = PlayerPrefs.GetInt("best").ToString();
+                GameManager.instance.playersPos2.text = info.scores[0].score.ToString() + ". You";
+                GameManager.instance.playersScore2.text = PlayerPrefs.GetInt("best").ToString();
+            }
+            if(PlayerPrefs.GetInt("best").ToString()==info.scores[1].score.ToString()){
+                GameManager.instance.name1.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.score1.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.name1a.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.score1a.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+            }
+            if(PlayerPrefs.GetInt("best").ToString()==info.scores[2].score.ToString()){
+                GameManager.instance.name2.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.score2.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.name2a.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.score2a.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+            }
+            if(PlayerPrefs.GetInt("best").ToString()==info.scores[3].score.ToString()){
+                GameManager.instance.name3.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.score3.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.name3a.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.score3a.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+            }
+            if(PlayerPrefs.GetInt("best").ToString()==info.scores[4].score.ToString()){
+                GameManager.instance.name4.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.score4.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.name4a.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.score4a.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+            }
+            if(PlayerPrefs.GetInt("best").ToString()==info.scores[5].score.ToString()){
+                GameManager.instance.name5.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.score5.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.name5a.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+                GameManager.instance.score5a.color = new Color(43.0f/255.0f, 43.0f/255.0f, 43.0f/255.0f);
+            }
+        }        
+    }    
+}
+
+public static class JsonHelper2
+{
+    public static T[] FromJson<T>(string json)
+    {
+        Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
+        return wrapper.Items;
+    }
+
+    public static string ToJson<T>(T[] array)
+    {
+        Wrapper<T> wrapper = new Wrapper<T>();
+        wrapper.Items = array;
+        return JsonUtility.ToJson(wrapper);
+    }
+
+    public static string ToJson<T>(T[] array, bool prettyPrint)
+    {
+        Wrapper<T> wrapper = new Wrapper<T>();
+        wrapper.Items = array;
+        return JsonUtility.ToJson(wrapper, prettyPrint);
+    }
+
+    [Serializable]
+    private class Wrapper<T>
+    {
+        public T[] Items;
+    }
 }

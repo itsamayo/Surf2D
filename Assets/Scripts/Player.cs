@@ -85,7 +85,7 @@ public class Player : MonoBehaviour {
 	private void RequestInterstitial()
 	{
 		#if UNITY_ANDROID
-			string adUnitId = "ca-app-pub-3940256099942544/1033173712";
+			string adUnitId = "ca-app-pub-3541577481831776/7973071593";
 		#elif UNITY_IPHONE
 			string adUnitId = "ca-app-pub-3940256099942544/4411468910";
 		#else
@@ -240,6 +240,7 @@ public class Player : MonoBehaviour {
 			character.transform.GetChild(0).gameObject.SetActive(false);
 			character.transform.GetChild(1).gameObject.SetActive(true);
 			// Access and fire SurferDied() from GameManager
+			this.interstitial.Destroy();
 			GameManager.instance.SurferDied ();
 		} else if (coll.gameObject.tag == "Diamond") {
 			GameManager.instance.CollectCoins ();
@@ -260,6 +261,12 @@ public class Player : MonoBehaviour {
 				source.PlayOneShot(speedboost);
 			}			
 			Destroy (coll.gameObject);
-		} 
+		}  else if (coll.gameObject.tag == "Slomo") {
+			GameManager.instance.CollectSlomo ();
+			if(GameManager.instance.gameOver != true){
+				source.PlayOneShot(speedboost);
+			}			
+			Destroy (coll.gameObject);
+		}
 	}
 }

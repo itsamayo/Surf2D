@@ -10,8 +10,8 @@ public class Islands : MonoBehaviour {
 
 	//Time it takes to spawn islands
 	[Space(3)]
-	private float waitingForNextSpawn = 2;
-	private float theCountdown = 2;
+	private float waitingForNextSpawn = 3f;
+	private float theCountdown = 2f;
 
 	// the range of X - Found to work best when set from -4 to 4
 	[Header ("X Spawn Range")]
@@ -36,9 +36,9 @@ public class Islands : MonoBehaviour {
 	public void Update()
 	{	
 		if(GameManager.instance.score <= 100){
-			waitingForNextSpawn = 3;
+			waitingForNextSpawn = 3f;
 		} else if (GameManager.instance.score >= 101 && GameManager.instance.score < 400) {
-			waitingForNextSpawn = 2;
+			waitingForNextSpawn = 2f;
 		} else if (GameManager.instance.score >= 401 && GameManager.instance.score < 1000) {
 			waitingForNextSpawn = 1.5f;
 		} else if (GameManager.instance.score >= 1001 && GameManager.instance.score < 2000) {
@@ -57,7 +57,7 @@ public class Islands : MonoBehaviour {
 		if (GameManager.instance.hasBegun == true && GameManager.instance.isPaused == false) {
 			// Timer to spawn the next island 
 			theCountdown -= Time.deltaTime;
-			if (theCountdown <= 0) {
+			if (theCountdown <= 0 && GameManager.instance.spawnsActive == true) {
 				SpawnIslands ();
 				theCountdown = waitingForNextSpawn;
 			}
@@ -76,8 +76,8 @@ public class Islands : MonoBehaviour {
 
 		// Creates the random island at the random 2D position.
 		Instantiate (islandsPrefab, pos, transform.rotation);
-
-	}	
+		
+	}		
 
 }
 

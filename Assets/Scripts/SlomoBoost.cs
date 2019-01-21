@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BigDiamonds : MonoBehaviour {
-
-	//Array of big diamonds to spawn 
-	public GameObject[] bigdiamonds;
+public class SlomoBoost : MonoBehaviour
+{
+    //Array of islands to spawn 
+	public GameObject[] slomoboosts;
 	//public GameObject clone;
 
-	//Time it takes to spawn big diamonds
+	//Time it takes to spawn coins
 	[Space(3)]
-	private float waitingForNextSpawn = 10f;
-	private float theCountdown = 10f;
+	private float waitingForNextSpawn = 5f;
+	private float theCountdown = 1f;
 
 	// the range of X - Found to work best when set from -4 to 4
 	[Header ("X Spawn Range")]
@@ -35,12 +35,12 @@ public class BigDiamonds : MonoBehaviour {
 	// Update is called once per frame
 	public void Update()
 	{
-		if (GameManager.instance.hasBegun == true && GameManager.instance.isPaused == false) {
-			// Timer to spawn the next coin 
+		if (GameManager.instance.hasBegun == true && GameManager.instance.isPaused == false && GameManager.instance.score > 2000) {
+			// Timer to spawn the next speedboost 
 			theCountdown -= Time.deltaTime;
 			if (theCountdown <= 0 && GameManager.instance.spawnsActive == true) {
-				// Spawn a coin
-				SpawnBigDiamonds ();
+				// Spawn a speedboost
+				SpawnSlomoboosts ();
 				theCountdown = waitingForNextSpawn;
 			}
 		}
@@ -48,26 +48,22 @@ public class BigDiamonds : MonoBehaviour {
 	}
 
 
-	void SpawnBigDiamonds()
+	void SpawnSlomoboosts()
 	{
 		// Defines the min and max ranges for x and y
 		Vector2 pos = new Vector2 (Random.Range (xMin, xMax), Random.Range (yMin, yMax));
 
-		// Chooses a new BigDiamonds to spawn from the array 
-		GameObject bigdiamondsPrefab = bigdiamonds [Random.Range (0, bigdiamonds.Length)];
+		// Chooses a new island to spawn from the array 
+		GameObject slomoPrefab = slomoboosts [Random.Range (0, slomoboosts.Length)];
 
-		// Creates the random BigDiamonds at the random 2D position.
-		Instantiate (bigdiamondsPrefab, pos, transform.rotation);
+		// Creates the random island at the random 2D position.
+		Instantiate (slomoPrefab, pos, transform.rotation);
 
 	}	
 
-	// Collision with rock destroys diamond
 	void OnCollisionEnter2D(Collision2D coll){
 		if (coll.gameObject.tag == "Obstacle") {
 			Destroy (coll.gameObject);
 		} 
 	}
-
 }
-
-

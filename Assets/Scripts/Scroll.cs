@@ -14,7 +14,7 @@ public class Scroll : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (GameManager.instance.hasBegun == true && GameManager.instance.isPaused == false) {
-			Vector2 offset = new Vector2 (0, Time.time * speed);
+			Vector2 offset = new Vector2 (0, Time.time * GameManager.instance.scrollSpeed);
 
 			GetComponent<Renderer> ().material.mainTextureOffset = offset;﻿
 		}

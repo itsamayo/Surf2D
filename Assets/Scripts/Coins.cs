@@ -10,8 +10,8 @@ public class Coins : MonoBehaviour {
 
 	//Time it takes to spawn coins
 	[Space(3)]
-	private float waitingForNextSpawn = 1;
-	private float theCountdown = 1;
+	private float waitingForNextSpawn = 1f;
+	private float theCountdown = 1f;
 
 	// the range of X - Found to work best when set from -4 to 4
 	[Header ("X Spawn Range")]
@@ -38,7 +38,7 @@ public class Coins : MonoBehaviour {
 		if (GameManager.instance.hasBegun == true && GameManager.instance.isPaused == false) {
 			// Timer to spawn the next coin 
 			theCountdown -= Time.deltaTime;
-			if (theCountdown <= 0) {
+			if (theCountdown <= 0 && GameManager.instance.spawnsActive == true) {
 				// Spawn a coin
 				SpawnCoins ();
 				theCountdown = waitingForNextSpawn;
