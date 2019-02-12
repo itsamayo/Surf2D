@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject muteButton;
 	public GameObject unmuteButton;
 	public GameObject networkError;
+	public GameObject quitGame;
 	public GameObject BoatSelect;
 	public GameObject newHighScore;
 	public GameObject loadingCircle;
@@ -292,6 +293,16 @@ public class GameManager : MonoBehaviour {
 	public void CloseNetworkError(){
 		networkError.SetActive(false);
 		gameOverText.SetActive(true);
+	}
+
+	public void OpenQuitGame(){
+		quitGame.SetActive(true);
+		startText.SetActive(false);
+	}	
+
+	public void CloseQuitGame(){
+		quitGame.SetActive(false);
+		startText.SetActive(true);
 	}	
 
 	public void SubmitNewHighScore(){
@@ -399,6 +410,11 @@ public class GameManager : MonoBehaviour {
 		scoreText.enabled = false;
 		// Sets gameOver to true so that the player can't move anymore
 		gameOver = true;		
+	}
+
+	//Quit game
+	public void QuitGame(){
+		Application.Quit();
 	}
 
 	[Serializable]
