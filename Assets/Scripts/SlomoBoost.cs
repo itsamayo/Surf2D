@@ -10,7 +10,7 @@ public class SlomoBoost : MonoBehaviour
 
 	//Time it takes to spawn coins
 	[Space(3)]
-	private float waitingForNextSpawn = 5f;
+	private float waitingForNextSpawn = 10f;
 	private float theCountdown = 1f;
 
 	// the range of X - Found to work best when set from -4 to 4

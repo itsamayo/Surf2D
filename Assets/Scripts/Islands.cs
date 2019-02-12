@@ -36,13 +36,13 @@ public class Islands : MonoBehaviour {
 	public void Update()
 	{	
 		if(GameManager.instance.score <= 100){
-			waitingForNextSpawn = 3f;
-		} else if (GameManager.instance.score >= 101 && GameManager.instance.score < 400) {
 			waitingForNextSpawn = 2f;
-		} else if (GameManager.instance.score >= 401 && GameManager.instance.score < 1000) {
+		} else if (GameManager.instance.score >= 101 && GameManager.instance.score < 400) {
 			waitingForNextSpawn = 1.5f;
-		} else if (GameManager.instance.score >= 1001 && GameManager.instance.score < 2000) {
+		} else if (GameManager.instance.score >= 401 && GameManager.instance.score < 1000) {
 			waitingForNextSpawn = 1f;
+		} else if (GameManager.instance.score >= 1001 && GameManager.instance.score < 2000) {
+			waitingForNextSpawn = 0.7f;
 		} else if (GameManager.instance.score >= 2001 && GameManager.instance.score < 3000) {
 			waitingForNextSpawn = 0.5f;
 		} else if (GameManager.instance.score >= 3001 && GameManager.instance.score < 4000) {

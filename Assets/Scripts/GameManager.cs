@@ -179,36 +179,43 @@ public class GameManager : MonoBehaviour {
 			levelUp.text = "Nice!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.17f;
 		}
 		if(distance >=400 && score <=410){
 			levelUp.text = "Keep going!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.18f;
 		}
 		if(distance >=1000 && score <=1010){
 			levelUp.text = "Killing it!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.20f;
 		}
 		if(distance >=2000 && score <= 2010){
 			levelUp.text = "Unbelievable!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.22f;
 		}
 		if(distance >=3000 && score <= 3010){
 			levelUp.text = "Still going?!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.24f;
 		}
 		if(distance >=4000 && score <= 4010){
 			levelUp.text = "You're insane!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.26f;
 		}
 		if(distance >=5000 && score <= 5010){
 			levelUp.text = "This is crazy!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.28f;
 		}
 	}
 
@@ -220,36 +227,43 @@ public class GameManager : MonoBehaviour {
 			levelUp.text = "Nice!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.17f;
 		}
 		if(distance >=400 && score <=450){
 			levelUp.text = "Keep going!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.18f;
 		}
 		if(distance >=1000 && score <=1050){
 			levelUp.text = "Killing it!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.20f;
 		}
 		if(distance >=2000 && score <= 2050){
 			levelUp.text = "Unbelievable!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.22f;
 		}
 		if(distance >=3000 && score <= 3050){
 			levelUp.text = "Still going?!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.24f;
 		}
 		if(distance >=4000 && score <= 4050){
 			levelUp.text = "You're insane!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.26f;
 		}
 		if(distance >=5000 && score <= 5050){
 			levelUp.text = "This is crazy!";
 			levelup.Play();
 			StartCoroutine(ShowLevelUpText());
+			scrollSpeed = 0.28f;
 		}
 	}
 
@@ -286,10 +300,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 	IEnumerator ActivateSlomo() {
+		float currentSpeed = scrollSpeed;
 		scrollSpeed = 0.08f;
 		spawnsActive = false;
 		yield return new WaitForSeconds(6);
-		scrollSpeed = 0.15f;
+		scrollSpeed = currentSpeed;
 		spawnsActive = true;
 	}
 	IEnumerator ActivateSpeedBoost() {
@@ -319,6 +334,11 @@ public class GameManager : MonoBehaviour {
 		StartCoroutine(FadeTextToFullAlpha(1f, scoreIncrease));
 		yield return new WaitForSeconds(1);
 		StartCoroutine(FadeTextToZeroAlpha(1f, scoreIncrease));
+	}
+
+	IEnumerator ShowNewHighScorePopup() {		
+		yield return new WaitForSeconds(1);
+		newHighScore.SetActive(true);
 	}
 
 	public IEnumerator FadeTextToFullAlpha(float t, Text i)
@@ -366,7 +386,7 @@ public class GameManager : MonoBehaviour {
 				Debug.Log("Error. Check internet connection!");
 				// networkError.SetActive(true);
 			} else {				
-				newHighScore.SetActive(true);				
+				StartCoroutine(ShowNewHighScorePopup());
 			}
 		}		
 		PlayerPrefs.SetInt ("score", 0);
