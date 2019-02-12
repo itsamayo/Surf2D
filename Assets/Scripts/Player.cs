@@ -35,7 +35,7 @@ public class Player : MonoBehaviour {
 	public Sprite blackBoat;
 	private int boatChoice;
 
-	private InterstitialAd interstitial;
+	private InterstitialAd pauseIntersticial;
 	
 	// Use this for initialization
 	void Start () {
@@ -79,25 +79,25 @@ public class Player : MonoBehaviour {
         #endif
 
         // Initialize the Google Mobile Ads SDK.
-        MobileAds.Initialize(appId);
-	}
+        MobileAds.Initialize(appId);	
+	}	
 
-	private void RequestInterstitial()
+	private void RequestPauseInterstitial()
 	{
 		#if UNITY_ANDROID
 			string adUnitId = "ca-app-pub-3541577481831776/7973071593";
 		#elif UNITY_IPHONE
-			string adUnitId = "ca-app-pub-3940256099942544/4411468910";
+			string adUnitId = "unexpected_platform";
 		#else
 			string adUnitId = "unexpected_platform";
 		#endif
 
 		// Initialize an InterstitialAd.
-		this.interstitial = new InterstitialAd(adUnitId);
+		this.pauseIntersticial = new InterstitialAd(adUnitId);
 		// Create an empty ad request.
 		AdRequest request = new AdRequest.Builder().Build();
 		// Load the interstitial with the request.
-		this.interstitial.LoadAd(request);
+		this.pauseIntersticial.LoadAd(request);
 	}
 
 	// Update is called once per frame
@@ -171,9 +171,9 @@ public class Player : MonoBehaviour {
 		GameManager.instance.pauseButton.SetActive (false);
 		GameManager.instance.leftButton.SetActive (false);
 		GameManager.instance.rightButton.SetActive (false);
-		if (this.interstitial.IsLoaded()) {
-			this.interstitial.Show();
-		}
+		if (this.pauseIntersticial.IsLoaded()) {
+			this.pauseIntersticial.Show();
+		}		
 	}
 
 	public void unpause(){
@@ -190,7 +190,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void startGame(){
-		this.RequestInterstitial();
+		this.RequestPauseInterstitial();				
 		StartCoroutine(startGameMovement());
 		GameManager.instance.startText.SetActive (false);
 		GameManager.instance.pauseButton.SetActive (true);
@@ -211,7 +211,7 @@ public class Player : MonoBehaviour {
 	public void leaderBoardClose(){
 		GameManager.instance.networkError.SetActive(false);
 		GameManager.instance.leaderboardText.SetActive(false);
-		GameManager.instance.startText.SetActive(true);
+		GameManager.instance.startText.SetActive(true);				
 	}
 
 	public void restart(){
@@ -240,8 +240,8 @@ public class Player : MonoBehaviour {
 			character.transform.GetChild(0).gameObject.SetActive(false);
 			character.transform.GetChild(1).gameObject.SetActive(true);
 			// Access and fire SurferDied() from GameManager
-			this.interstitial.Destroy();
-			GameManager.instance.SurferDied ();
+			this.pauseIntersticial.Destroy();
+			GameManager.instance.SurferDied ();				
 		} else if (coll.gameObject.tag == "Diamond") {
 			GameManager.instance.CollectCoins ();
 			if(GameManager.instance.gameOver != true){
